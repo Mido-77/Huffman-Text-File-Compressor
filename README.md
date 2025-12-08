@@ -1,1 +1,1 @@
-# Huffman-Text-File-Compressor-
+# Huffman-Text-File-Compressor
