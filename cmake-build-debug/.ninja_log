@@ -1,0 +1,23 @@
+# ninja log v6
+4	72	1765913276459412020	build.ninja	2087ad05ca9d01b5
+4	28	1765905857734928763	CMakeFiles/Huffman_Text_File_Compressor.dir/Huffman.cpp.o	34d619ede92fa4e0
+6	417	1765911565797904033	CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o	cfd6f421e96aec25
+417	460	1765911566208830926	Huffman_Text_File_Compressor	d70e797543d20400
+5	469	1765913743048894703	CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o	cfd6f421e96aec25
+469	591	1765913743513313964	Huffman_Text_File_Compressor	d70e797543d20400
+5	430	1765913945562146306	CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o	cfd6f421e96aec25
+430	474	1765913945987497234	Huffman_Text_File_Compressor	d70e797543d20400
+6	373	1765914345197786842	CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o	cfd6f421e96aec25
+373	415	1765914345565370788	Huffman_Text_File_Compressor	d70e797543d20400
+5	421	1765914391404232195	CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o	cfd6f421e96aec25
+422	464	1765914391820604193	Huffman_Text_File_Compressor	d70e797543d20400
+5	436	1765914604728328792	CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o	cfd6f421e96aec25
+436	481	1765914605159099119	Huffman_Text_File_Compressor	d70e797543d20400
+5	555	1765914992537236300	CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o	cfd6f421e96aec25
+555	675	1765914993086930412	Huffman_Text_File_Compressor	d70e797543d20400
+6	445	1765915010486683734	CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o	cfd6f421e96aec25
+445	490	1765915010926206158	Huffman_Text_File_Compressor	d70e797543d20400
+5	434	1765915017752425515	CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o	cfd6f421e96aec25
+435	479	1765915018181691680	Huffman_Text_File_Compressor	d70e797543d20400
+4	384	1765915106806118619	CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o	cfd6f421e96aec25
+384	424	1765915107185364111	Huffman_Text_File_Compressor	d70e797543d20400

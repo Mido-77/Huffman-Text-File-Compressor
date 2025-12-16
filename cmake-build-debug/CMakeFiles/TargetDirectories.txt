@@ -1,0 +1,3 @@
+/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/cmake-build-debug/CMakeFiles/Huffman_Text_File_Compressor.dir
+/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/cmake-build-debug/CMakeFiles/rebuild_cache.dir
