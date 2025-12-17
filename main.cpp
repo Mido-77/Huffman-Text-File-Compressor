@@ -12,6 +12,21 @@ bool inArr()
 int main()
 {
 
+    int choice;
+    printf("   Huffman Compression/Decompression Tool\n");
+    printf("===============================================\n");
+
+    while (true)
+    {
+        printf("\nMenu:\n");
+        printf("1. Compress a file\n");
+        printf("2. Decompress a file\n");
+        printf("3. Compress a file 5 TIMES\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        getchar();
+    }
 
     
     // Compression
