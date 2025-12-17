@@ -4,8 +4,7 @@
 
 #ifndef NODE_H
 #define NODE_H
-class Node
-{
+class Node {
 public:
     int freq;
     char data;
@@ -26,4 +25,4 @@ public:
         right = r;
     }
 };
-#endif //NODE_H
+#endif // NODE_H

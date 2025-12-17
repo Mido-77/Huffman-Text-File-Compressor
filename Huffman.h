@@ -4,13 +4,11 @@
 
 #ifndef HUFFMAN_H
 #define HUFFMAN_H
-#include <fstream>
 #include "Heap.h"
 #include "Node.h"
+#include <fstream>
 #include <iostream>
 using namespace std;
-
-
 
 string readFile(string fileName)
 {
@@ -24,32 +22,39 @@ string readFile(string fileName)
     MyReadFile.close();
     return input;
 }
-void writeFile(string fileName, Heap& heap)
+void writeFreqTableFile(const string& fileName, Heap& heap)
 {
     ofstream MyFile(fileName);
-    Node value;
-    while (heap.Poll(&value))
-    {
-        if (value.data == '\n') {
-            MyFile << "\\n | " << value.freq << endl;
-            cout << "\\n | " << value.freq << endl;
-        } else if (value.data == '\t') {
-            MyFile << "\\t | " << value.freq << endl;
-            cout << "\\t | " << value.freq << endl;
-        } else if (value.data == ' ') {
-            MyFile << "SPACE | " << value.freq << endl;
-            cout << "SPACE | " << value.freq << endl;
+    if (!MyFile.is_open())
+        return;
+
+    Node* value;
+    while ((value = heap.Poll()) != nullptr) {
+
+        if (value->data == '\n') {
+            MyFile << "\\n | " << value->freq << endl;
+            cout << "\\n | " << value->freq << endl;
+
+        } else if (value->data == '\t') {
+            MyFile << "\\t | " << value->freq << endl;
+            cout << "\\t | " << value->freq << endl;
+
+        } else if (value->data == ' ') {
+            MyFile << "SPACE | " << value->freq << endl;
+            cout << "SPACE | " << value->freq << endl;
+
         } else {
-            MyFile << value.data << " | " << value.freq << endl;
-            cout << value.data << " | " << value.freq << endl;
+            MyFile << value->data << " | " << value->freq << endl;
+            cout << value->data << " | " << value->freq << endl;
         }
     }
+
     MyFile.close();
 }
 Heap getFrequencies(string input)
 {
     int size = 0;
-    int freq[256] = {0};
+    int freq[256] = { 0 };
     char letter[256];
     for (int i = 0; i < input.length(); i++) {
         bool found = false;
@@ -62,7 +67,7 @@ Heap getFrequencies(string input)
         if (!found) {
             letter[size] = input[i];
             freq[size] = 1;
-            for ( int j = i+1; j < input.length(); j++ ) {
+            for (int j = i + 1; j < input.length(); j++) {
                 if (letter[size] == input[j]) {
                     freq[size]++;
                 }
@@ -86,24 +91,43 @@ Heap getFrequencies(string input)
     Heap heap;
 
     for (int i = 0; i < size; i++) {
-        Node* n = new Node(letter[i], freq[i]);
-        heap.Add(*n);
-        delete n;
+        heap.Add(Node(letter[i], freq[i]));
     }
+    // writeFreqTableFile("/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/output.txt",
+    // heap);
     return heap;
-    writeFile("/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/output.txt", heap);
-    
+}
+
+void postOrder(Node* recNode)
+{
+    if (recNode == nullptr)
+        return;
+
+    postOrder(recNode->left);
+    postOrder(recNode->right);
+    cout << recNode->data << "\t";
 }
 
 Node* tree(Heap heap)
 {
-    for (int i = 0; i < heap.size(); i+=2) {
-        int f = heap.arr[i].freq + heap.arr[i+1].freq;
-        Node* parent = new Node(f, &heap.arr[i], &heap.arr[i+1]);
-        
+    Node* parent;
+    cout << heap.size << endl;
+    while (heap.size > 1) {
+        Node* left = heap.Poll();
+        Node* right = heap.Poll();
+
+        parent = new Node(left->freq + right->freq, left, right);
+        heap.Add(*parent);
+        cout << "Heap Size: " << heap.size << " " << parent->data << "-" << parent->freq << " "
+             << left->data << "|" << right->data << endl;
     }
+    parent = heap.Poll();
+
+    cout << "\n" <<  parent->left->right->data   << endl;
+    
+    
+    // postOrder(parent);
+    return parent;
 }
 
-
-
-#endif //HUFFMAN_H
+#endif // HUFFMAN_H
