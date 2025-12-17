@@ -28,6 +28,29 @@ int main()
         getchar();
     }
 
+    if (choice == 1) //compressing
+    {
+        
+    }
+    else if (choice == 2) //decompressing
+    {
+        
+    }
+    else if (choice == 3) //recursive compressing (bonus)
+    {
+        
+    }
+    else if (choice == 4) //terminate the program
+    {
+        
+    }
+    else // re-enter a correct input
+    {
+        printf("You have entered a worng input");
+        // go back to choices
+    }
+
+
     
     // Compression
     // 1-Read File
