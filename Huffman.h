@@ -51,6 +51,11 @@ void writeFreqTableFile(const string& fileName, Heap& heap)
 
     MyFile.close();
 }
+void writeCodes(const string& fileName, string code)
+{
+    ofstream MyFile(fileName);
+    MyFile << code << endl;
+}
 Heap getFrequencies(string input)
 {
     int size = 0;
@@ -75,19 +80,6 @@ Heap getFrequencies(string input)
             size++;
         }
     }
-
-    // for (int i = 0; i < size; i++) {
-    //     if (letter[i] == '\n') {
-    //         cout << "\\n | " << freq[i] << endl;
-    //     } else if (letter[i] == '\t') {
-    //         cout << "\\t | " << freq[i] << endl;
-    //     } else if (letter[i] == ' ') {
-    //         cout << "SPACE | " << freq[i] << endl;
-    //     } else {
-    //         cout << letter[i] << " | " << freq[i] << endl;
-    //     }
-    // }
-
     Heap heap;
 
     for (int i = 0; i < size; i++) {
@@ -98,14 +90,17 @@ Heap getFrequencies(string input)
     return heap;
 }
 
-void postOrder(Node* recNode)
+void postOrder(Node* recNode, string output)
 {
     if (recNode == nullptr)
         return;
-
-    postOrder(recNode->left);
-    postOrder(recNode->right);
-    cout << recNode->data << "\t";
+    if (recNode->data != '\0') {
+        string code = recNode->data + ":" + output;
+        cout << recNode->data << ":" <<  output << endl;
+        writeCodes("/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/output.cod", code); 
+    }
+    postOrder(recNode->left, output + "0");
+    postOrder(recNode->right, output + "1");
 }
 
 Node* tree(Heap heap)
@@ -115,19 +110,17 @@ Node* tree(Heap heap)
     while (heap.size > 1) {
         Node* left = heap.Poll();
         Node* right = heap.Poll();
-
+        
         parent = new Node(left->freq + right->freq, left, right);
         heap.Add(*parent);
-        cout << "Heap Size: " << heap.size << " " << parent->data << "-" << parent->freq << " "
-             << left->data << "|" << right->data << endl;
+
+        // cout << "Heap Size: " << heap.size << " " << parent->data << "-" << parent->freq << " "
+        //      << left->data << "|" << right->data << endl;
     }
     parent = heap.Poll();
-
-    cout << "\n" <<  parent->left->right->data   << endl;
-    
-    
-    // postOrder(parent);
+    postOrder(parent, "");
     return parent;
 }
+
 
 #endif // HUFFMAN_H
