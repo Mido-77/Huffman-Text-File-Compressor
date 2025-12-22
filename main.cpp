@@ -45,11 +45,13 @@ int main()
     // 1-Read File
     string input = readFile("/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.txt");
 
-    tree(getFrequencies(input));
+    Node* root = tree(getFrequencies(input));
     Compress("/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.txt",
         "/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.cod",
         "/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.com");
-
+    Decompress("/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.com",
+        "/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.cod",
+        "/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input2.txt", root );
     
     // int value;
     // while (h.Poll(&value))

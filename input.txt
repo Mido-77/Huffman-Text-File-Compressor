@@ -1,1 +1,2 @@
-lossless
+Huffman-Text-File-Compressor
+links:

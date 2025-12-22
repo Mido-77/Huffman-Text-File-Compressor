@@ -92,7 +92,7 @@ Heap getFrequencies(string input)
     return heap;
 }
 
-void postOrder(Node* recNode, string output)
+void printCodes(Node* recNode, string output)
 {
     if (recNode == nullptr)
         return;
@@ -102,8 +102,8 @@ void postOrder(Node* recNode, string output)
         code += ":" + output;
         writeCodes("/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.cod", code); 
     }
-    postOrder(recNode->left, output + "0");
-    postOrder(recNode->right, output + "1");
+    printCodes(recNode->left, output + "0");
+    printCodes(recNode->right, output + "1");
 }
 
 Node* tree(Heap heap)
@@ -120,7 +120,7 @@ Node* tree(Heap heap)
         //      << left->data << "|" << right->data << endl;
     }
     parent = heap.Poll();
-    postOrder(parent, "");
+    printCodes(parent, "");
     return parent;
 }
 
@@ -136,30 +136,28 @@ int getDecimal(string input)
             dec_value += base;
         base = base * 2;
     }
-    cout << dec_value << endl;
+    // cout << dec_value << endl;
     return dec_value;
 }
 
-string setStringtoASCII(string str)
+string stringtoASCII(string str, int& pad)
 {
-    // Pad with zeros if needed to make it multiple of 8
     if (str.length() % 8 != 0) {
         int padding = 8 - (str.length() % 8);
+        pad = padding;
         for (int i = 0; i < padding; i++) {
             str += '0';
         }
     }
 
-    // To store final answer
     string res = "";
     int N = str.length();
 
-    // Loop to iterate through string
     for (int i = 0; i < N; i += 8) {
         int decimal_value = getDecimal(str.substr(i, 8));
-        res += char(decimal_value);  // Append ASCII character
+        res += char(decimal_value);
     }
-    
+     
     return res;
 }
 void Compress(string inputFile, string codeFile, string outputFile)
@@ -184,18 +182,70 @@ void Compress(string inputFile, string codeFile, string outputFile)
     // get binary output
     for (int i = 0; i < input.length(); i++) {
         output += arr[input.at(i)];
-        cout <<  arr[input.at(i)];
+        // cout <<  arr[input.at(i)];
     }
 
     cout << endl;
     // get decimal output and write to .com
-    string compressed = setStringtoASCII(output);
     
-    cout << compressed;
+    int padding;
+    string compressed = stringtoASCII(output, padding);
+    outputStream << padding;
     outputStream << compressed;
 
-    
     cout << endl;
+}
+
+string decToBinary(unsigned char n)
+{
+    string binary = "00000000";  // pre-fill 8 zeros
+    for (int i = 7; i >= 0; i--)
+    {
+        if (n % 2 == 1)
+            binary[i] = '1';
+        n /= 2;
+    }
+    return binary;
+}
+
+void Decompress(string inputFile, string codeFile, string outputFile, Node* root)
+{
+    string input =  readFile(inputFile);
+    ifstream code(codeFile);
+    ofstream outputStream(outputFile, ios::app);
+    string output;
+
+    int padding = input.at(0) - '0';
+    // cout << padding << endl;
+
+    string compressed = input.substr(1);
+    // cout << compressed << endl;
+
+    string binary = "";
+    for (int i = 0; i < compressed.length(); i++) {
+        int num = (unsigned char)compressed[i];
+        binary += decToBinary(num);
+    }
+
+    binary = binary.substr(0,binary.length()-padding);
+ 
+    // cout << endl;
+    // cout << binary << endl;
+
+    Node* it = root;
+    for (int i=0; i<binary.length() ; i++) {
+        if (binary.at(i) == '1') {
+            it = it->right;
+        }
+        else {
+            it = it->left;
+        }
+
+        if (it->right == nullptr && it->left == nullptr) {
+            outputStream << it->data;
+            it = root; 
+        }
+    }
 }
 
 #endif // HUFFMAN_H
