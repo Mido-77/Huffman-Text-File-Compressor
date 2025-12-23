@@ -39,23 +39,27 @@ Huffman-Text-File-Compressor/
 
 ## 🛠️ Installation & Compilation
 Using CMake:
-
+<pre>
 mkdir build
 cd build
 cmake ..
 make
+</pre>
 
 Direct Compilation:
+<pre>
 g++ -std=c++14 main.cpp -o HuffmanCompressor
+</pre>
 
 ## 📖 Usage
 Running the Program:
+<pre>
 ./Huffman_Text_File_Compressor
-
+</pre>
 
 
 ## Program Menu:
-
+<pre>
 Huffman Compression/Decompression Tool
 ===============================================
 
@@ -64,7 +68,7 @@ Menu:
 2. Decompress a file
 3. Compress a file 5 TIMES (Bonus - currently commented)
 4. Exit
-
+</pre>
 
 ## Input/Output Files:
 ### Input Files:
@@ -73,13 +77,14 @@ Example content: Huffman-Text-File-Compressor\nlinks:\n
 
 ### Generated Files:
 - input.cod: Huffman code mapping:
+<pre>
 o:0000
 H:00010
 u:00011
 r:0010
 ::00110
 ... (character:binary_code pairs)
-
+</pre>
 
 - input.com: Compressed binary file
 Contains padding information + ASCII-encoded binary data
@@ -165,7 +170,12 @@ Solution: Should use relative paths or command-line arguments
 
 3. Memory Leaks
 The Poll() function in Heap.h creates a new Node but doesn't track deletion:
-
+<pre>
+Node* Poll() {
+    Node* item = new Node(arr[0]);  // Memory allocated
+    return item;  // Caller must delete
+}
+</pre>
 
 4. Character Range Limitation
 - Uses 256-sized arrays assuming ASCII
