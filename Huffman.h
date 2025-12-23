@@ -1,7 +1,3 @@
-//
-// Created by Ahmed Ibrahim on 16/12/2025.
-//
-
 #ifndef HUFFMAN_H
 #define HUFFMAN_H
 #include "Heap.h"
@@ -11,6 +7,7 @@
 #include <iostream>
 using namespace std;
 
+// Reading file content
 string readFile(string fileName)
 {
     string input = "";
@@ -22,12 +19,15 @@ string readFile(string fileName)
     MyReadFile.close();
     return input;
 }
+
+
+// Printing frequency table in terminal
 void writeFreqTableFile(const string& fileName, Heap& heap)
 {
-    ofstream MyFile(fileName);
+   /* ofstream MyFile(fileName);
     if (!MyFile.is_open())
-        return;
-
+        return;*/
+    
     Node* value;
     while ((value = heap.Poll()) != nullptr) {
 
@@ -49,16 +49,22 @@ void writeFreqTableFile(const string& fileName, Heap& heap)
         }
     }
 
-    MyFile.close();
+    //MyFile.close();
 }
+
+// Writing codes to .cod file
 void writeCodes(const string& fileName, string code)
 {
     ofstream MyFile(fileName, ios::app);
     MyFile << code << "\n";
     MyFile.close();
 }
+
+
+// Getting frequencies of each character in the input string
 Heap getFrequencies(string input)
 {
+	// Arrays to store unique characters and their frequencies
     int size = 0;
     int freq[256] = { 0 };
     char letter[256];
@@ -70,6 +76,7 @@ Heap getFrequencies(string input)
                 break;
             }
         }
+		// If character not found, add it to the array
         if (!found) {
             letter[size] = input[i];
             freq[size] = 1;
@@ -81,17 +88,18 @@ Heap getFrequencies(string input)
             size++;
         }
     }
+	// Creating a min-heap to store characters and their frequencies
     Heap heap;
     cout << "Frequencies:" << endl;
     for (int i = 0; i < size; i++) {
         heap.Add(Node(letter[i], freq[i]));
         cout << letter[i] << " : " << freq[i] << endl;
     }
-    // writeFreqTableFile("/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/output.txt",
-    // heap);
+
     return heap;
 }
 
+// Generating Huffman Codes by traversing the tree (pre-order)
 void printCodes(Node* recNode, string output)
 {
     if (recNode == nullptr)
@@ -106,42 +114,44 @@ void printCodes(Node* recNode, string output)
     printCodes(recNode->right, output + "1");
 }
 
+// Building Huffman Tree
 Node* tree(Heap heap)
 {
     Node* parent;
     while (heap.size > 1) {
         Node* left = heap.Poll();
         Node* right = heap.Poll();
-        
         parent = new Node(left->freq + right->freq, left, right);
         heap.Add(*parent);
-
-        // cout << "Heap Size: " << heap.size << " " << parent->data << "-" << parent->freq << " "
-        //      << left->data << "|" << right->data << endl;
     }
+
+	// The last remaining node is the root of the Huffman Tree
     parent = heap.Poll();
     printCodes(parent, "");
     return parent;
 }
 
+// Converting binary string to decimal
 int getDecimal(string input)
 {
     string num = input;
     int dec_value = 0;
     int base = 1;
-
     int len = num.length();
+
     for (int i = len - 1; i >= 0; i--) {
         if (num[i] == '1')
             dec_value += base;
         base = base * 2;
     }
-    // cout << dec_value << endl;
+
     return dec_value;
 }
 
+// Converting binary string to ASCII characters
 string stringtoASCII(string str, int& pad)
 {
+	// Padding the string to make its length a multiple of 8
     if (str.length() % 8 != 0) {
         int padding = 8 - (str.length() % 8);
         pad = padding;
@@ -149,7 +159,7 @@ string stringtoASCII(string str, int& pad)
             str += '0';
         }
     }
-
+	// Convert every 8 bits to its corresponding ASCII character
     string res = "";
     int N = str.length();
 
@@ -160,8 +170,12 @@ string stringtoASCII(string str, int& pad)
      
     return res;
 }
+
+
+// Compressing input file using the generated codes
 void Compress(string inputFile, string codeFile, string outputFile)
 {
+	// read input file
     string input =  readFile(inputFile);
     ifstream code(codeFile);
     ofstream outputStream(outputFile, ios::app);
@@ -171,23 +185,23 @@ void Compress(string inputFile, string codeFile, string outputFile)
     string arr[256];
     string line;
     while (getline(code, line)) {
-        if (line.empty()) continue;
+        if (line.empty()) {
+			continue;
+        }
 
         char symbol = line.at(0);        // before ':'
         string code = line.substr(2); // after "x:"
-        
         arr[symbol] = code;
     }
 
     // get binary output
     for (int i = 0; i < input.length(); i++) {
         output += arr[input.at(i)];
-        // cout <<  arr[input.at(i)];
     }
 
     cout << endl;
+
     // get decimal output and write to .com
-    
     int padding;
     string compressed = stringtoASCII(output, padding);
     outputStream << padding;
@@ -196,6 +210,7 @@ void Compress(string inputFile, string codeFile, string outputFile)
     cout << endl;
 }
 
+// Converting decimal to binary string
 string decToBinary(unsigned char n)
 {
     string binary = "00000000";  // pre-fill 8 zeros
@@ -208,30 +223,29 @@ string decToBinary(unsigned char n)
     return binary;
 }
 
+
+// Decompressing .com file using the Huffman Tree
 void Decompress(string inputFile, string codeFile, string outputFile, Node* root)
 {
+	// read input file
     string input =  readFile(inputFile);
     ifstream code(codeFile);
     ofstream outputStream(outputFile, ios::app);
     string output;
-
+    
     int padding = input.at(0) - '0';
-    // cout << padding << endl;
-
     string compressed = input.substr(1);
-    // cout << compressed << endl;
-
     string binary = "";
+
+	// convert compressed string to binary string
     for (int i = 0; i < compressed.length(); i++) {
         int num = (unsigned char)compressed[i];
         binary += decToBinary(num);
     }
 
     binary = binary.substr(0,binary.length()-padding);
- 
-    // cout << endl;
-    // cout << binary << endl;
 
+    // traverse the tree according to the binary string
     Node* it = root;
     for (int i=0; i<binary.length() ; i++) {
         if (binary.at(i) == '1') {
@@ -247,5 +261,6 @@ void Decompress(string inputFile, string codeFile, string outputFile, Node* root
         }
     }
 }
+
 
 #endif // HUFFMAN_H

@@ -1,11 +1,10 @@
 # Huffman-Text-File-Compressor
 
-links:
+Huffman Compression/Decompression Tool
+===============================================
 
-https://www.w3schools.com/dsa/dsa_ref_huffman_coding.php \
-https://en.cppreference.com/w/cpp/string/basic_string/max_size \
-https://www.geeksforgeeks.org/dsa/huffman-coding-greedy-algo-3/
-
-https://www.geeksforgeeks.org/dsa/huffman-decoding/
-
-https://www.geeksforgeeks.org/dsa/text-file-compression-and-decompression-using-huffman-coding/
+Menu:
+1. Compress a file
+2. Decompress a file
+3. Compress a file 5 TIMES (Bonus - currently commented)
+4. Exit

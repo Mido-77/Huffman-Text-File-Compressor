@@ -1,7 +1,3 @@
-//
-// Created by Ahmed Ibrahim on 16/12/2025.
-//
-
 #ifndef HEAP_H
 #define HEAP_H
 #include "Node.h"
@@ -10,6 +6,7 @@
 
 using namespace std;
 
+// Definition of Heap (Min-Heap) class
 class Heap {
 public:
     Node* arr;
@@ -28,7 +25,7 @@ public:
             return true;
         return false;
     }
-
+    
     bool hasRightChild(int parentIndex)
     {
         if (getRightChildIndex(parentIndex) < size)
@@ -63,12 +60,14 @@ public:
         }
     }
 
+	// Helper Function:To swap two nodes in the array
     void swap(int i1, int i2)
     {
         Node temp = arr[i1];
         arr[i1] = arr[i2];
         arr[i2] = temp;
     }
+
     // Helper Function:To make sure that the smallest value is always at first
     void heapifyUp()
     {
@@ -88,17 +87,22 @@ public:
         while (hasLeftChild(index)) {
             int smallestChildIndex = getLeftChildIndex(index);
             if (hasRightChild(index)
+            {
                 && arr[getRightChildIndex(index)].freq < arr[smallestChildIndex].freq)
                 smallestChildIndex = getRightChildIndex(index);
-
+            }
             if (arr[index].freq < arr[smallestChildIndex].freq)
+            {
                 break;
+            }
             else {
                 swap(index, smallestChildIndex);
                 index = smallestChildIndex;
             }
         }
     }
+
+	// Constructor and Destructor
     Heap()
     {
         size = 0;
@@ -120,6 +124,8 @@ public:
         heapifyUp();
     }
 
+
+	// Removing and returning the minimum element from the heap
     Node* Poll()
     {
         // Check if the array is empty

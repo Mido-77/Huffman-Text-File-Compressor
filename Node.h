@@ -1,9 +1,7 @@
-//
-// Created by Ahmed Ibrahim on 16/12/2025.
-//
-
 #ifndef NODE_H
 #define NODE_H
+
+// Definition of Node class
 class Node {
 public:
     int freq;
