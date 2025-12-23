@@ -15,17 +15,21 @@ This is a C++ implementation of a Huffman coding-based text file compression and
 - Menu-Driven Interface: User-friendly command-line interface
 
 ## 📁 Project Structure
+
+<pre>
 Huffman-Text-File-Compressor/
 ├── CMakeLists.txt
 ├── main.cpp
 ├── Huffman.h
 ├── Heap.h
 ├── Node.h
-├── input.txt          # Example input file
-├── input.cod          # Generated Huffman codes
-├── input.com          # Compressed output
-├── input2.txt         # Decompressed output
+├── input.txt # Example input file
+├── input.cod # Generated Huffman codes
+├── input.com # Compressed output
+├── input2.txt # Decompressed output
 └── README.md
+</pre>
+
 
 
 ## 🔧 Requirements
@@ -118,15 +122,16 @@ Example: 6êžw°õ/X™úÐx—÷bYø€
 - Heapify operations for maintaining heap property
 
 2. Node.h (Huffman Tree Node)
+```cpp
 class Node {
     int freq;      // Character frequency
     char data;     // Character (0 for internal nodes)
     Node* left;    // Left child (0 bit)
     Node* right;   // Right child (1 bit)
 };
+```
 
-
-3. Huffman.h (Core Algorithms)
+4. Huffman.h (Core Algorithms)
 - getFrequencies(): Builds character frequency table
 - tree(): Constructs Huffman tree
 - Compress(): Performs file compression
@@ -153,17 +158,16 @@ class Node {
 ## ⚠️ Current Limitations & Issues
 1. Fixed File Paths
 The code uses hardcoded absolute paths:
+<pre>
 "/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.txt"
+</pre>
 Solution: Should use relative paths or command-line arguments
 
-2. Memory Leaks
+3. Memory Leaks
 The Poll() function in Heap.h creates a new Node but doesn't track deletion:
-Node* Poll() {
-    Node* item = new Node(arr[0]);  // Memory allocated
-    return item;  // Caller must delete
-}
 
-3. Character Range Limitation
+
+4. Character Range Limitation
 - Uses 256-sized arrays assuming ASCII
 - May not handle extended character sets
 
