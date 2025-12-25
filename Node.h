@@ -1,21 +1,23 @@
 #ifndef NODE_H
 #define NODE_H
 
+#define ll unsigned long long
+
 // Definition of Node class
 class Node {
 public:
-    int freq;
+    ll freq;
     char data;
     Node* left;
     Node* right;
 
-    Node(char d = 0, int f = 0)
+    Node(char d = 0, ll f = 0)
     {
         freq = f;
         data = d;
         left = right = nullptr;
     }
-    Node(int f, Node* l, Node* r)
+    Node(ll f, Node* l, Node* r)
     {
         freq = f;
         data = 0;

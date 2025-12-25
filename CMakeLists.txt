@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(Huffman_Text_File_Compressor
     main.cpp
+    Huffman.cpp
         Heap.h
         Huffman.h
         Node.h)

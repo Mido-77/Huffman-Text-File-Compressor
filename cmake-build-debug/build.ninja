@@ -55,6 +55,12 @@ build CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o: CXX_COMPILER__Huff
   OBJECT_DIR = CMakeFiles/Huffman_Text_File_Compressor.dir
   OBJECT_FILE_DIR = CMakeFiles/Huffman_Text_File_Compressor.dir
 
+build CMakeFiles/Huffman_Text_File_Compressor.dir/Huffman.cpp.o: CXX_COMPILER__Huffman_Text_File_Compressor_unscanned_Debug /Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/Huffman.cpp || cmake_object_order_depends_target_Huffman_Text_File_Compressor
+  DEP_FILE = CMakeFiles/Huffman_Text_File_Compressor.dir/Huffman.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -mmacosx-version-min=15.7 -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/Huffman_Text_File_Compressor.dir
+  OBJECT_FILE_DIR = CMakeFiles/Huffman_Text_File_Compressor.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Huffman_Text_File_Compressor
@@ -63,7 +69,7 @@ build CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o: CXX_COMPILER__Huff
 #############################################
 # Link the executable Huffman_Text_File_Compressor
 
-build Huffman_Text_File_Compressor: CXX_EXECUTABLE_LINKER__Huffman_Text_File_Compressor_Debug CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o
+build Huffman_Text_File_Compressor: CXX_EXECUTABLE_LINKER__Huffman_Text_File_Compressor_Debug CMakeFiles/Huffman_Text_File_Compressor.dir/main.cpp.o CMakeFiles/Huffman_Text_File_Compressor.dir/Huffman.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk -mmacosx-version-min=15.7
   OBJECT_DIR = CMakeFiles/Huffman_Text_File_Compressor.dir
   POST_BUILD = :

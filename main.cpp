@@ -1,53 +1,62 @@
-#include "Heap.h"
 #include "Huffman.h"
-#include <fstream>
 #include <iostream>
-bool inArr() { }
+#include <string>
+
+using namespace std;
+
 int main()
 {
-
     int choice;
-    printf("   Huffman Compression/Decompression Tool\n");
-    printf("===============================================\n");
+    string filename, codeFile, compressedFile;
 
-     while (true) {
-         printf("\nMenu:\n");
-         printf("1. Compress a file\n");
-         printf("2. Decompress a file\n");
-         printf("3. Compress a file 5 TIMES\n");
-         printf("4. Exit\n");
-         printf("Enter your choice: ");
-         scanf("%d", &choice);
-         getchar();
-         if (choice == 1) // compressing
-         {
-             // 1-Read File
-             string input = readFile("/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.txt");
-             Compress("/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.txt",
-                 "/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.cod",
-                 "/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.com");
-         } 
-         else if (choice == 2) // decompressing
-         {
-             Decompress("/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.com",
-                 "/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input.cod",
-                 "/Users/0ne83/CLionProjects/Huffman-Text-File-Compressor/input2.txt", root);
-         } 
-         //else if (choice == 3) // recursive compressing (bonus)
-         //{
-    
-         //} 
-         else if (choice == 4) // terminate the program
-         {
-             return 0;
-         } 
-         else // re-enter a correct input
-         {
-             printf("You have entered a worng input");
-             // go back to choices
-         }
-     }
+    cout << "   Huffman Compression/Decompression Tool" << endl;
+    cout << "===============================================" << endl;
+    while (true) {
+        cout << "\nMenu:" << endl;
+        cout << "1. Compress a file" << endl;
+        cout << "2. Decompress a file" << endl;
+        cout << "3. Compress a file 5 TIMES (Recursive)" << endl;
+        cout << "4. Exit" << endl;
+        cout << "Enter your choice: ";
 
+        if (!(cin >> choice)) {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            continue;
+        }
+
+        if (choice == 1) // compressing
+        {
+            cout << "Enter filename to compress (e.g., input.txt): ";
+            cin >> filename;
+            codeFile = filename + ".cod";
+            compressedFile = filename + ".com";
+
+            cout << "Compressing " << filename << "..." << endl;
+            Compress(filename, codeFile, compressedFile);
+            cout << "Done! Created: " << codeFile << ", " << compressedFile << endl;
+        } else if (choice == 2) // decompressing
+        {
+            cout << "Enter filename to decompress (e.g., input.txt.com): ";
+            cin >> compressedFile;
+
+            cout << "Enter code file name (e.g., input.txt.cod): ";
+            cin >> codeFile;
+
+            cout << "Enter output filename (e.g., input_restored.txt): ";
+            string outputFile;
+            cin >> outputFile;
+
+            cout << "Decompressing..." << endl;
+            Decompress(compressedFile, codeFile, outputFile);
+            cout << "Done! Created: " << outputFile << endl;
+        } else if (choice == 4) // terminate the program
+        {
+            return 0;
+        } else {
+            cout << "Invalid choice" << endl;
+        }
+    }
 
     return 0;
 }
