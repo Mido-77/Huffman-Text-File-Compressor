@@ -52,12 +52,12 @@ int main()
 
         cin >> choice;
 
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(10000, '\n');
-            cout << "Invalid input" << endl;
-            continue;
-        }
+        //if (cin.fail()) {
+          //  cin.clear();
+         //   cin.ignore(10000, '\n');
+         //   cout << "Invalid input" << endl;
+         //   continue;
+       // }
 
         if (choice == 1) {
             cout << "Enter filename to compress (.txt): ";
