@@ -43,28 +43,6 @@ void writeFreqTableFile(string fileName, Heap heap)
         }
     }
 }
-
-// Write codes to .cod
-void writeCodesBatch(string fileName, string codes[256])
-{
-    ofstream codeFile(fileName);
-    for (int i = 0; i < 256; i++) {
-        if (codes[i] != "") {
-            char c = (char)i;
-            if (c == '\n') {
-                codeFile << "\\n:" << codes[i] << endl;
-            } else if (c == '\t') {
-                codeFile << "\\t:" << codes[i] << endl;
-            } else if (c == '\\') {
-                codeFile << "\\\\:" << codes[i] << endl;
-            } else {
-                codeFile << c << ":" << codes[i] << endl;
-            }
-        }
-    }
-    codeFile.close();
-}
-
 // get character frequencies from input file
 Heap getFrequencies(string fileName)
 {
@@ -90,6 +68,30 @@ Heap getFrequencies(string fileName)
         }
     }
     return heap;
+}
+
+// Write codes to .cod
+void writeCodesBatch(string fileName, string codes[256])
+{
+    ofstream codeFile(fileName);
+    for (int i = 0; i < 256; i++) {
+        if (codes[i] != "") {
+            char c = (char)i;
+            if (c == '\n') {
+                codeFile << "\\n:" << codes[i] << endl;
+            }
+            else if (c == '\t') {
+                codeFile << "\\t:" << codes[i] << endl;
+            }
+            else if (c == '\\') {
+                codeFile << "\\\\:" << codes[i] << endl;
+            }
+            else {
+                codeFile << c << ":" << codes[i] << endl;
+            }
+        }
+    }
+    codeFile.close();
 }
 
 void generateCodes(Node* node, string code, string codes[256])

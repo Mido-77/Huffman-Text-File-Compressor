@@ -60,7 +60,7 @@ int main()
         }
 
         if (choice == 1) {
-            cout << "Enter filename to compress: ";
+            cout << "Enter filename to compress (.txt): ";
             cin >> filename;
 
             // Check if file exists and size
@@ -83,23 +83,22 @@ int main()
             codeFile = baseName + ".cod";
             compressedFile = baseName + ".com";
 
-            cout << "Compressing" << endl;
+            cout << "Compressing..." << endl;
             Compress(filename, codeFile, compressedFile);
-            cout << "Done" << endl;
             cout << "Created: " << codeFile << ", " << compressedFile << endl;
 
         } else if (choice == 2) {
-            cout << "Enter compressed file .com): ";
+            cout << "Enter compressed file (.com): ";
             cin >> compressedFile;
 
-            cout << "Enter code file .cod): ";
+            cout << "Enter code file (.cod): ";
             cin >> codeFile;
 
-            cout << "Enter output filename: ";
+            cout << "Enter output filename (.txt): ";
             string outputFile;
             cin >> outputFile;
 
-            cout << "Decompressing" << endl;
+            cout << "Decompressing..." << endl;
             Decompress(compressedFile, codeFile, outputFile);
             cout << "Created: " << outputFile << endl;
 
