@@ -7,37 +7,37 @@
 #include <string>
 using namespace std;
 
-// Printing frequency table in terminal
-void writeFreqTableFile(const string& fileName, Heap heap);
+// Delete Huffman tree to free memory
+void deleteTree(Node* node);
 
-// Writing codes to .cod file
-void writeCodes(const string& fileName, string code);
+// Get file size
+ll getFileSize(string fileName);
 
-// Getting frequencies of each character from the input file (Streaming)
-Heap getFrequencies(const string& fileName);
+// Print frequency table
+void writeFreqTableFile(string fileName, Heap heap);
 
-// Generating Huffman Codes by traversing the tree (pre-order)
-void printCodes(Node* recNode, string output, string fileName);
+// Write codes to file
+void writeCodesBatch(string fileName, string codes[256]);
 
-// Building Huffman Tree
+// Count character frequencies
+Heap getFrequencies(string fileName);
+
+// Generate Huffman codes from tree
+void generateCodes(Node* node, string code, string codes[256]);
+
+// Build Huffman tree
 Node* tree(Heap heap);
 
-// Converting binary string to decimal
-int getDecimal(string input);
-
-// Converting binary string to ASCII characters
-string stringtoASCII(string str, int& pad);
-
-// Compressing input file using the generated codes
-void Compress(string inputFile, string codeFile, string outputFile);
-
-// Converting decimal to binary string
+// Convert byte to binary string
 string decToBinary(unsigned char n);
 
-// Rebuild Huffman tree from code file
+// Compress a file
+void Compress(string inputFile, string codeFile, string outputFile);
+
+// Rebuild tree from code file
 Node* rebuildTreeFromCodeFile(string codeFile);
 
-// Decompressing .com file using the Huffman Tree rebuilt from code file
+// Decompress a file
 void Decompress(string inputFile, string codeFile, string outputFile);
 
 #endif // HUFFMAN_H

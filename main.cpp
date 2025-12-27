@@ -1,8 +1,38 @@
 #include "Huffman.h"
+#include <fstream>
 #include <iostream>
 #include <string>
 
 using namespace std;
+
+// Maximum file size allowed (4GB)
+ll MAX_FILE_SIZE = 4ULL * 1024 * 1024 * 1024;
+
+// Helper to get file size
+ll checkFileSize(string filename)
+{
+    ifstream file(filename, ios::binary | ios::ate);
+    if (!file.is_open())
+        return -1;
+    ll size = file.tellg();
+    file.close();
+    return size;
+}
+
+// Helper to get base filename without extension
+string removeExtension(string filename)
+{
+    int dotPos = -1;
+    for (int i = filename.length() - 1; i >= 0; i--) {
+        if (filename[i] == '.') {
+            dotPos = i;
+            break;
+        }
+    }
+    if (dotPos == -1)
+        return filename;
+    return filename.substr(0, dotPos);
+}
 
 int main()
 {
@@ -10,49 +40,73 @@ int main()
     string filename, codeFile, compressedFile;
 
     cout << "   Huffman Compression/Decompression Tool" << endl;
-    cout << "===============================================" << endl;
+    cout << "=============================================" << endl;
+
     while (true) {
-        cout << "\nMenu:" << endl;
+        cout << endl;
+        cout << "Menu:" << endl;
         cout << "1. Compress a file" << endl;
         cout << "2. Decompress a file" << endl;
-        cout << "3. Compress a file 5 TIMES (Recursive)" << endl;
-        cout << "4. Exit" << endl;
-        cout << "Enter your choice: ";
+        cout << "3. Exit" << endl;
+        cout << "Enter choice: ";
 
-        if (!(cin >> choice)) {
+        cin >> choice;
+
+        if (cin.fail()) {
             cin.clear();
             cin.ignore(10000, '\n');
+            cout << "Invalid input" << endl;
             continue;
         }
 
-        if (choice == 1) // compressing
-        {
-            cout << "Enter filename to compress (e.g., input.txt): ";
+        if (choice == 1) {
+            cout << "Enter filename to compress: ";
             cin >> filename;
-            codeFile = filename + ".cod";
-            compressedFile = filename + ".com";
 
-            cout << "Compressing " << filename << "..." << endl;
+            // Check if file exists and size
+            ll fileSize = checkFileSize(filename);
+            if (fileSize == -1) {
+                cout << "Error: Cannot open file" << endl;
+                continue;
+            }
+            if (fileSize == 0) {
+                cout << "Error: File is empty" << endl;
+                continue;
+            }
+            if (fileSize > MAX_FILE_SIZE) {
+                cout << "Error: File too large (max 4GB)" << endl;
+                continue;
+            }
+
+            // Create output filenames
+            string baseName = removeExtension(filename);
+            codeFile = baseName + ".cod";
+            compressedFile = baseName + ".com";
+
+            cout << "Compressing..." << endl;
             Compress(filename, codeFile, compressedFile);
-            cout << "Done! Created: " << codeFile << ", " << compressedFile << endl;
-        } else if (choice == 2) // decompressing
-        {
-            cout << "Enter filename to decompress (e.g., input.txt.com): ";
+            cout << "Done!" << endl;
+            cout << "Created: " << codeFile << ", " << compressedFile << endl;
+
+        } else if (choice == 2) {
+            cout << "Enter compressed file (e.g. input.com): ";
             cin >> compressedFile;
 
-            cout << "Enter code file name (e.g., input.txt.cod): ";
+            cout << "Enter code file (e.g. input.cod): ";
             cin >> codeFile;
 
-            cout << "Enter output filename (e.g., input_restored.txt): ";
+            cout << "Enter output filename: ";
             string outputFile;
             cin >> outputFile;
 
             cout << "Decompressing..." << endl;
             Decompress(compressedFile, codeFile, outputFile);
-            cout << "Done! Created: " << outputFile << endl;
-        } else if (choice == 4) // terminate the program
-        {
+            cout << "Created: " << outputFile << endl;
+
+        } else if (choice == 3) {
+            cout << "Goodbye!" << endl;
             return 0;
+
         } else {
             cout << "Invalid choice" << endl;
         }

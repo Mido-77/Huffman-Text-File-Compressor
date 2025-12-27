@@ -1,100 +1,132 @@
 #include "Huffman.h"
 
-// Printing frequency table in terminal
-void writeFreqTableFile(const string& fileName, Heap heap)
+const int BUFFER_SIZE = 65536; // 64KB buffer
+
+// delete Huffman tree and free memory so that there are no memory leaks
+void deleteTree(Node* node)
 {
-    cout << "Frequencies (Sorted):" << endl;
+    if (node == nullptr)
+        return;
+    deleteTree(node->left);
+    deleteTree(node->right);
+    delete node;
+}
+
+// get file size
+ll getFileSize(string fileName)
+{
+    ifstream file(fileName, ios::binary | ios::ate);
+    if (!file.is_open())
+        return 0;
+    ll size = file.tellg();
+    file.close();
+    return size;
+}
+
+// print frequency table
+void writeFreqTableFile(string fileName, Heap heap)
+{
+    cout << "Frequencies" << endl;
     while (heap.size > 0) {
         Node value = heap.Poll();
         if (value.freq == (ll)-1)
-            break; // Empty heap sentinel
+            break;
 
         if (value.data == '\n') {
             cout << "\\n | " << value.freq << endl;
-
         } else if (value.data == '\t') {
             cout << "\\t | " << value.freq << endl;
-
         } else if (value.data == ' ') {
             cout << "SPACE | " << value.freq << endl;
-
         } else {
             cout << value.data << " | " << value.freq << endl;
         }
     }
 }
 
-// Writing codes to .cod file
-void writeCodes(const string& fileName, string code)
+// Write codes to .cod
+void writeCodesBatch(string fileName, string codes[256])
 {
-    ofstream MyFile(fileName, ios::app);
-
-    char symbol = code.at(0);
-    if (symbol == '\n') {
-        MyFile << "\\n" << code.substr(1) << "\n";
-    } else if (symbol == '\t') {
-        MyFile << "\\t" << code.substr(1) << "\n";
-    } else if (symbol == '\\') {
-        MyFile << "\\\\" << code.substr(1) << "\n";
-    } else {
-        MyFile << code << "\n";
+    ofstream codeFile(fileName);
+    for (int i = 0; i < 256; i++) {
+        if (codes[i] != "") {
+            char c = (char)i;
+            if (c == '\n') {
+                codeFile << "\\n:" << codes[i] << endl;
+            } else if (c == '\t') {
+                codeFile << "\\t:" << codes[i] << endl;
+            } else if (c == '\\') {
+                codeFile << "\\\\:" << codes[i] << endl;
+            } else {
+                codeFile << c << ":" << codes[i] << endl;
+            }
+        }
     }
-    MyFile.close();
+    codeFile.close();
 }
 
-// Getting frequencies of each character from the input file (Streaming)
-Heap getFrequencies(const string& fileName)
+// get character frequencies from input file
+Heap getFrequencies(string fileName)
 {
-    ll freq[256] = { 0 };
+    ll freq[256] = {0};
 
     ifstream file(fileName, ios::binary);
-    if (!file.is_open()) {
-        cout << "Error: Could not open file " << fileName << endl;
-        return Heap();
-    }
 
-    const int BUFFER_SIZE = 4096 * 4;
     char buffer[BUFFER_SIZE];
-
     while (file) {
         file.read(buffer, BUFFER_SIZE);
-        std::streamsize count = file.gcount();
-
-        for (std::streamsize i = 0; i < count; ++i) {
+        int count = file.gcount();
+        for (int i = 0; i < count; i++) {
             freq[(unsigned char)buffer[i]]++;
         }
     }
     file.close();
 
+    // Add all characters with freq > 0 to heap
     Heap heap;
     for (int i = 0; i < 256; i++) {
         if (freq[i] > 0) {
             heap.Add(Node((char)i, freq[i]));
         }
     }
-
     return heap;
 }
 
-// Generating Huffman Codes by traversing the tree (pre-order)
-void printCodes(Node* recNode, string output, string fileName)
+void generateCodes(Node* node, string code, string codes[256])
 {
-    if (recNode == nullptr)
+    if (node == nullptr)
         return;
-    if (recNode->data != '\0') {
-        string code;
-        code.append(1, recNode->data);
-        code += ":" + output;
-        writeCodes(fileName, code);
+
+    if (node->left == nullptr && node->right == nullptr) {
+        if (code == "")
+            codes[(unsigned char)node->data] = "0";
+        else
+            codes[(unsigned char)node->data] = code;
+        
+        char c = node->data;
+        if (c == '\n')
+            cout << "\\n : " << codes[(unsigned char)c] << endl;
+        else if (c == '\t')
+            cout << "\\t : " << codes[(unsigned char)c] << endl;
+        else if (c == ' ')
+            cout << "SPACE : " << codes[(unsigned char)c] << endl;
+        else
+            cout << c << " : " << codes[(unsigned char)c] << endl;
+        
+        return;
     }
-    printCodes(recNode->left, output + "0", fileName);
-    printCodes(recNode->right, output + "1", fileName);
+
+    generateCodes(node->left, code + "0", codes);
+    generateCodes(node->right, code + "1", codes);
 }
 
-// Building Huffman Tree
+// Build Huffman tree from heap
 Node* tree(Heap heap)
 {
-    Node* parent = nullptr;
+    if (heap.size == 0)
+        return nullptr;
+
+    // Build tree by combining two smallest nodes
     while (heap.size > 1) {
         Node leftVal = heap.Poll();
         Node rightVal = heap.Poll();
@@ -107,137 +139,82 @@ Node* tree(Heap heap)
         right->left = rightVal.left;
         right->right = rightVal.right;
 
-        parent = new Node(left->freq + right->freq, left, right);
+        // Create parent node
+        Node* parent = new Node(left->freq + right->freq, left, right);
         heap.Add(*parent);
     }
 
-    if (heap.size == 1) {
-        Node rootVal = heap.Poll();
-        if (parent == nullptr) {
-            parent = new Node(rootVal.data, rootVal.freq);
-            parent->left = rootVal.left;
-            parent->right = rootVal.right;
-        }
-    }
-    return parent;
+    // Get root
+    Node rootVal = heap.Poll();
+    Node* root = new Node(rootVal.data, rootVal.freq);
+    root->left = rootVal.left;
+    root->right = rootVal.right;
+    return root;
 }
 
-// Converting binary string to decimal
-int getDecimal(string input)
+string decToBinary(unsigned char n)
 {
-    string num = input;
-    int dec_value = 0;
-    int base = 1;
-    int len = num.length();
-
-    for (int i = len - 1; i >= 0; i--) {
-        if (num[i] == '1')
-            dec_value += base;
-        base = base * 2;
+    string binary = "00000000";
+    for (int i = 7; i >= 0; i--) {
+        if (n % 2 == 1)
+            binary[i] = '1';
+        n = n / 2;
     }
-
-    return dec_value;
+    return binary;
 }
 
-// Converting binary string to ASCII characters
-string stringtoASCII(string str, int& pad)
-{
-    pad = 0;
-    if (str.length() % 8 != 0) {
-        int padding = 8 - (str.length() % 8);
-        pad = padding;
-        for (int i = 0; i < padding; i++) {
-            str += '0';
-        }
-    }
-    string res = "";
-    int N = str.length();
-
-    for (int i = 0; i < N; i += 8) {
-        int decimal_value = getDecimal(str.substr(i, 8));
-        res += char(decimal_value);
-    }
-
-    return res;
-}
-
-// Reading file content into a string
-string readFile(const string& fileName)
-{
-    ifstream file(fileName, ios::binary);
-    if (!file.is_open()) {
-        cout << "Error: Could not open file " << fileName << endl;
-        return "";
-    }
-    string content;
-    file.seekg(0, ios::end);
-    content.resize(file.tellg());
-    file.seekg(0, ios::beg);
-    file.read(&content[0], content.size());
-    file.close();
-    return content;
-}
-
+// Compress a file
 void Compress(string inputFile, string codeFile, string outputFile)
 {
-    ofstream clearCode(codeFile, ios::trunc);
-    clearCode.close();
-
-    ofstream out(outputFile, ios::binary | ios::trunc);
-
     Heap freqHeap = getFrequencies(inputFile);
     Node* root = tree(freqHeap);
 
-    printCodes(root, "", codeFile);
-    
+    cout << "Generated Codes:" << endl;
     string codes[256];
-    ifstream codeIn(codeFile);
-    string line;
+    generateCodes(root, "", codes);
+    writeCodesBatch(codeFile, codes);
+    deleteTree(root);
 
-    while (getline(codeIn, line)) {
-        if (line.empty()) continue;
 
-        char symbol;
-        string binary;
+    ifstream in(inputFile, ios::binary);
+    ofstream out(outputFile, ios::binary);
 
-        if (line[0] == '\\') {
-            if (line[1] == 'n') symbol = '\n';
-            else if (line[1] == 't') symbol = '\t';
-            else symbol = '\\';
-            binary = line.substr(3);
-        } else {
-            symbol = line[0];
-            binary = line.substr(2);
-        }
-        codes[(unsigned char)symbol] = binary;
-    }
-    codeIn.close();
-
-    // STEP 4: Write placeholder for padding
     unsigned char padding = 0;
     out.write((char*)&padding, 1);
-    
-    // STEP 5: Compress input file using bit buffer
-    ifstream in(inputFile, ios::binary);
 
+    char buffer[BUFFER_SIZE];
     unsigned char bitBuffer = 0;
     int bitCount = 0;
+    ll bytesRead = 0;
+    ll totalSize = getFileSize(inputFile);
 
-    char buffer[65536]; // 64 KB
-
-    while (in.read(buffer, sizeof(buffer)) || in.gcount()) {
+    while (in) {
+        in.read(buffer, BUFFER_SIZE);
         int count = in.gcount();
+        if (count == 0)
+            break;
 
+        bytesRead += count;
+
+        // Show progress every MB
+        if (bytesRead % (1024 * 1024) == 0) {
+            int percent = (bytesRead * 100) / totalSize;
+            cout << "\rProgress: " << percent << "%   " << flush;
+        }
+
+        // Encode each byte
         for (int i = 0; i < count; i++) {
-            string code = codes[(unsigned char)buffer[i]];
+            string& code = codes[(unsigned char)buffer[i]];
+            int codeLen = code.length();
 
-            for (int j = 0; j < code.length(); j++) {
+            // Add each bit of code to buffer
+            for (int j = 0; j < codeLen; j++) {
                 bitBuffer = bitBuffer << 1;
                 if (code[j] == '1')
                     bitBuffer = bitBuffer | 1;
-
                 bitCount++;
 
+                // Write byte when buffer is full
                 if (bitCount == 8) {
                     out.put(bitBuffer);
                     bitBuffer = 0;
@@ -247,244 +224,149 @@ void Compress(string inputFile, string codeFile, string outputFile)
         }
     }
 
-    // STEP 6: Handle remaining bits
+    // Handle remaining bits
     if (bitCount > 0) {
         padding = 8 - bitCount;
         bitBuffer = bitBuffer << padding;
         out.put(bitBuffer);
     }
 
-    // STEP 7: Write padding value at file start
-    out.seekp(0, ios::beg);
+    // Write padding at start of file
+    out.seekp(0);
     out.write((char*)&padding, 1);
 
     in.close();
     out.close();
+
+
+    ll compressedSize = getFileSize(outputFile);
+    cout << "Original size: " << totalSize << " bytes" << endl;
+    cout << "Compressed size: " << compressedSize << " bytes" << endl;
+    cout << "Compression ratio: " << (compressedSize * 100 / totalSize) << "%" << endl;
 }
 
-// Compressing input file using the generated codes
-// void Compress(string inputFile, string codeFile, string outputFile)
-// {
-//     ofstream codeClear(codeFile, ios::trunc);
-//     codeClear.close();
-//
-//     string input = readFile(inputFile);
-//     Heap freqHeap = getFrequencies(inputFile);
-//
-//     writeFreqTableFile("", freqHeap);
-//
-//     Node* root = tree(freqHeap);
-//     printCodes(root, "", codeFile);
-//     ifstream code(codeFile);
-//     ofstream outputStream(outputFile, ios::trunc);
-//     string output;
-//
-//     string arr[256];
-//     string line;
-//     while (getline(code, line)) {
-//         if (line.empty()) {
-//             continue;
-//         }
-//
-//         char symbol;
-//         string binaryCode;
-//
-//         if (line.length() >= 2 && line.at(0) == '\\') {
-//             char escaped = line.at(1);
-//             if (escaped == 'n') {
-//                 symbol = '\n';
-//                 binaryCode = line.substr(3);
-//             } else if (escaped == 't') {
-//                 symbol = '\t';
-//                 binaryCode = line.substr(3);
-//             } else if (escaped == '\\') {
-//                 symbol = '\\';
-//                 binaryCode = line.substr(3);
-//             } else {
-//                 symbol = line.at(0);
-//                 binaryCode = line.substr(2);
-//             }
-//         } else {
-//             symbol = line.at(0);
-//             binaryCode = line.substr(2);
-//         }
-//         arr[(unsigned char)symbol] = binaryCode;
-//     }
-//
-//     for (int i = 0; i < input.length(); i++) {
-//         output += arr[input.at(i)];
-//     }
-//
-//     cout << endl;
-//
-//     int padding;
-//     string compressed = stringtoASCII(output, padding);
-//     outputStream << padding;
-//     outputStream << compressed;
-//
-//     cout << endl;
-// }
-
-
-
-// Converting decimal to binary string
-string decToBinary(unsigned char n)
-{
-    string binary = "00000000";
-    for (int i = 7; i >= 0; i--) {
-        if (n % 2 == 1)
-            binary[i] = '1';
-        n /= 2;
-    }
-    return binary;
-}
-
-// Rebuild Huffman tree from code file
+// Rebuild tree from code file
 Node* rebuildTreeFromCodeFile(string codeFile)
 {
     ifstream file(codeFile);
+
     Node* root = new Node();
     string line;
 
     while (getline(file, line)) {
-        if (line.empty()) {
+        if (line.empty())
             continue;
-        }
 
         char symbol;
-        string binaryCode;
+        string code;
 
-        if (line.length() >= 2 && line.at(0) == '\\') {
-            char escaped = line.at(1);
-            if (escaped == 'n') {
+        if (line[0] == '\\' && line.length() >= 2) {
+            if (line[1] == 'n') {
                 symbol = '\n';
-                binaryCode = line.substr(3);
-            } else if (escaped == 't') {
+                code = line.substr(3);
+            } else if (line[1] == 't') {
                 symbol = '\t';
-                binaryCode = line.substr(3);
-            } else if (escaped == '\\') {
+                code = line.substr(3);
+            } else if (line[1] == '\\') {
                 symbol = '\\';
-                binaryCode = line.substr(3);
+                code = line.substr(3);
             } else {
-                symbol = line.at(0);
-                binaryCode = line.substr(2);
+                symbol = line[0];
+                code = line.substr(2);
             }
         } else {
-            symbol = line.at(0);
-            binaryCode = line.substr(2);
+            symbol = line[0];
+            code = line.substr(2);
         }
 
+        
         Node* current = root;
-        for (int i = 0; i < binaryCode.length(); i++) {
-            if (binaryCode[i] == '0') {
-                if (current->left == nullptr) {
+        for (int i = 0; i < code.length(); i++) {
+            if (code[i] == '0') {
+                if (current->left == nullptr)
                     current->left = new Node();
-                }
                 current = current->left;
             } else {
-                if (current->right == nullptr) {
+                if (current->right == nullptr)
                     current->right = new Node();
-                }
                 current = current->right;
             }
         }
         current->data = symbol;
     }
-
     file.close();
     return root;
 }
 
+// Decompress a file
 void Decompress(string inputFile, string codeFile, string outputFile)
 {
-    // Rebuild Huffman tree from code file
     Node* root = rebuildTreeFromCodeFile(codeFile);
 
     ifstream in(inputFile, ios::binary);
-    if (!in.is_open()) {
-        cout << "Error: Cannot open " << inputFile << endl;
-        return;
-    }
+    ofstream out(outputFile, ios::binary);
 
-    ofstream out(outputFile, ios::binary | ios::trunc);
-    if (!out.is_open()) {
-        cout << "Error: Cannot open " << outputFile << endl;
-        in.close();
-        return;
-    }
 
-    // STEP 1: Read padding (first byte)
+    // Read padding byte
     unsigned char padding;
     in.read((char*)&padding, 1);
 
+    ll totalSize = getFileSize(inputFile);
+    ll bytesRead = 1;
+
     Node* current = root;
-    unsigned char byte;
+    char buffer[BUFFER_SIZE];
+    char outBuffer[BUFFER_SIZE];
+    int outPos = 0;
 
-    // STEP 2: Read compressed bytes one by one
-    while (in.read((char*)&byte, 1)) {
+    while (in) {
+        in.read(buffer, BUFFER_SIZE);
+        int count = in.gcount();
+        if (count == 0)
+            break;
 
-        // Determine how many bits to read in this byte
-        int bitsToRead = 8;
-        if (in.peek() == EOF) {
-            // Last byte, ignore padding bits
-            bitsToRead = 8 - padding;
-        }
+        bytesRead += count;
 
-        // STEP 3: Process bits from MSB to LSB
-        for (int i = 7; i >= 8 - bitsToRead; i--) {
-            int bit = (byte >> i) & 1;
+        bool isLastChunk = (in.peek() == EOF);
 
-            // Walk Huffman tree
-            if (bit == 0)
-                current = current->left;
-            else
-                current = current->right;
 
-            // Leaf node reached → output character
-            if (current->left == nullptr && current->right == nullptr) {
-                out.put(current->data);
-                current = root;
+        for (int i = 0; i < count; i++) {
+            unsigned char byte = (unsigned char)buffer[i];
+
+            // How many bits to read from this byte
+            int bitsToRead = 8;
+            if (isLastChunk && i == count - 1) {
+                bitsToRead = 8 - padding;
+            }
+
+            for (int bit = 7; bit >= 8 - bitsToRead; bit--) {
+                int bitVal = (byte >> bit) & 1;
+
+                if (bitVal == 0)
+                    current = current->left;
+                else
+                    current = current->right;
+
+                // If leaf node, output character
+                if (current != nullptr && current->left == nullptr && current->right == nullptr) {
+                    outBuffer[outPos++] = current->data;
+                    current = root;
+
+                    if (outPos >= BUFFER_SIZE) {
+                        out.write(outBuffer, outPos);
+                        outPos = 0;
+                    }
+                }
             }
         }
     }
 
+    if (outPos > 0) {
+        out.write(outBuffer, outPos);
+    }
     in.close();
     out.close();
+    deleteTree(root);
+
+    cout << "Decompression done" << endl;
 }
-
-
-
-// Decompressing .com file using the Huffman Tree rebuilt from code file
-// void Decompress(string inputFile, string codeFile, string outputFile)
-// {
-//     Node* root = rebuildTreeFromCodeFile(codeFile);
-//
-//     string input = readFile(inputFile);
-//     ofstream outputStream(outputFile, ios::app);
-//
-//     int padding = input.at(0) - '0';
-//     string compressed = input.substr(1);
-//     string binary = "";
-//
-//     for (int i = 0; i < compressed.length(); i++) {
-//         int num = (unsigned char)compressed[i];
-//         binary += decToBinary(num);
-//     }
-//
-//     binary = binary.substr(0, binary.length() - padding);
-//
-//     Node* it = root;
-//     for (int i = 0; i < binary.length(); i++) {
-//         if (binary.at(i) == '1') {
-//             it = it->right;
-//         } else {
-//             it = it->left;
-//         }
-//
-//         if (it->right == nullptr && it->left == nullptr) {
-//             outputStream << it->data;
-//             it = root;
-//         }
-//     }
-//     outputStream.close();
-// }
