@@ -83,30 +83,28 @@ int main()
             codeFile = baseName + ".cod";
             compressedFile = baseName + ".com";
 
-            cout << "Compressing..." << endl;
+            cout << "Compressing" << endl;
             Compress(filename, codeFile, compressedFile);
-            cout << "Done!" << endl;
+            cout << "Done" << endl;
             cout << "Created: " << codeFile << ", " << compressedFile << endl;
 
         } else if (choice == 2) {
-            cout << "Enter compressed file (e.g. input.com): ";
+            cout << "Enter compressed file .com): ";
             cin >> compressedFile;
 
-            cout << "Enter code file (e.g. input.cod): ";
+            cout << "Enter code file .cod): ";
             cin >> codeFile;
 
             cout << "Enter output filename: ";
             string outputFile;
             cin >> outputFile;
 
-            cout << "Decompressing..." << endl;
+            cout << "Decompressing" << endl;
             Decompress(compressedFile, codeFile, outputFile);
             cout << "Created: " << outputFile << endl;
 
         } else if (choice == 3) {
-            cout << "Goodbye!" << endl;
             return 0;
-
         } else {
             cout << "Invalid choice" << endl;
         }

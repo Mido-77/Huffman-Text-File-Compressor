@@ -186,7 +186,6 @@ void Compress(string inputFile, string codeFile, string outputFile)
     unsigned char bitBuffer = 0;
     int bitCount = 0;
     ll bytesRead = 0;
-    ll totalSize = getFileSize(inputFile);
 
     while (in) {
         in.read(buffer, BUFFER_SIZE);
@@ -195,12 +194,6 @@ void Compress(string inputFile, string codeFile, string outputFile)
             break;
 
         bytesRead += count;
-
-        // Show progress every MB
-        if (bytesRead % (1024 * 1024) == 0) {
-            int percent = (bytesRead * 100) / totalSize;
-            cout << "\rProgress: " << percent << "%   " << flush;
-        }
 
         // Encode each byte
         for (int i = 0; i < count; i++) {
@@ -237,12 +230,6 @@ void Compress(string inputFile, string codeFile, string outputFile)
 
     in.close();
     out.close();
-
-
-    ll compressedSize = getFileSize(outputFile);
-    cout << "Original size: " << totalSize << " bytes" << endl;
-    cout << "Compressed size: " << compressedSize << " bytes" << endl;
-    cout << "Compression ratio: " << (compressedSize * 100 / totalSize) << "%" << endl;
 }
 
 // Rebuild tree from code file
