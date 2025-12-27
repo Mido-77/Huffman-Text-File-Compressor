@@ -1,2 +1,15 @@
-#Huffman-Text-File-Compressor
-links:
+# Huffman Text File Compressor
+
+## 📌 Overview
+This is a C++ implementation of a Huffman coding-based text file compression and decompression tool. It uses Huffman's algorithm to build an optimal prefix code for characters in a text file, compressing the file while maintaining lossless reconstruction.
+
+## 🚀 Features
+- Compression: Converts text files into compressed binary format (.com)
+
+- Decompression: Reconstructs original text from compressed files
+
+- Frequency Analysis: Displays character frequencies in the terminal
+
+- Code Generation: Creates a code mapping file (.cod) for Huffman codes
+
+- Menu-Driven Interface: User-friendly command-line interface

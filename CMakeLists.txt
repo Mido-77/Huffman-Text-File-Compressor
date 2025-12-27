@@ -9,3 +9,6 @@ add_executable(Huffman_Text_File_Compressor
         Heap.h
         Huffman.h
         Node.h)
+set_target_properties(Huffman_Text_File_Compressor PROPERTIES
+        VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+)
