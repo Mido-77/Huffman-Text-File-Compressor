@@ -1,9 +1,12 @@
 # Huffman Text File Compressor
 https://github.com/Mido-77/Huffman-Text-File-Compressor.git
 
+Mohamed Tarek 232004026
+Ahmed Ibrahim 241003317
+ECE2103 data structure & algorithms
+
 ## 📌 Overview
 A C++ implementation of Huffman coding for text file compression and decompression.
-
 
 ## 📚 Our Development Story
 ### 🧠 Starting with the Basics
