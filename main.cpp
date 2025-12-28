@@ -42,6 +42,7 @@ int main()
     cout << "   Huffman Compression/Decompression Tool" << endl;
     cout << "=============================================" << endl;
 
+    
     while (true) {
         cout << endl;
         cout << "Menu:" << endl;
@@ -51,7 +52,7 @@ int main()
         cout << "Enter choice: ";
 
         cin >> choice;
-
+        
         if (choice == 1) {
             cout << "Enter filename to compress (.txt): ";
             cin >> filename;
@@ -80,7 +81,9 @@ int main()
             Compress(filename, codeFile, compressedFile);
             cout << "Created: " << codeFile << ", " << compressedFile << endl;
 
-        } else if (choice == 2) {
+        } 
+     
+        else if (choice == 2) {
             cout << "Enter compressed file (.com): ";
             cin >> compressedFile;
 
@@ -95,9 +98,11 @@ int main()
             Decompress(compressedFile, codeFile, outputFile);
             cout << "Created: " << outputFile << endl;
 
-        } else if (choice == 3) {
+        } 
+        else if (choice == 3) {
             return 0;
-        } else {
+        }
+        else {
             cout << "Invalid choice" << endl;
         }
     }
