@@ -43,6 +43,7 @@ void writeFreqTableFile(string fileName, Heap heap)
         }
     }
 }
+
 // get character frequencies from input file
 Heap getFrequencies(string fileName)
 {
@@ -50,6 +51,7 @@ Heap getFrequencies(string fileName)
 
     ifstream file(fileName, ios::binary);
 
+	// Read file in chunks
     char buffer[BUFFER_SIZE];
     while (file) {
         file.read(buffer, BUFFER_SIZE);
@@ -70,7 +72,7 @@ Heap getFrequencies(string fileName)
     return heap;
 }
 
-// Write codes to .cod
+// Write codes to .cod file
 void writeCodesBatch(string fileName, string codes[256])
 {
     ofstream codeFile(fileName);
@@ -94,6 +96,7 @@ void writeCodesBatch(string fileName, string codes[256])
     codeFile.close();
 }
 
+// Generate Huffman codes from tree in preorder traversal
 void generateCodes(Node* node, string code, string codes[256])
 {
     if (node == nullptr)
@@ -154,6 +157,7 @@ Node* tree(Heap heap)
     return root;
 }
 
+// Convert decimal to 8-bit binary string
 string decToBinary(unsigned char n)
 {
     string binary = "00000000";
@@ -241,7 +245,7 @@ Node* rebuildTreeFromCodeFile(string codeFile)
 
     Node* root = new Node();
     string line;
-
+    
     while (getline(file, line)) {
         if (line.empty())
             continue;
@@ -249,6 +253,7 @@ Node* rebuildTreeFromCodeFile(string codeFile)
         char symbol;
         string code;
 
+		// Handle escaped characters
         if (line[0] == '\\' && line.length() >= 2) {
             if (line[1] == 'n') {
                 symbol = '\n';
@@ -268,7 +273,7 @@ Node* rebuildTreeFromCodeFile(string codeFile)
             code = line.substr(2);
         }
 
-        
+		// Insert symbol into tree based on code
         Node* current = root;
         for (int i = 0; i < code.length(); i++) {
             if (code[i] == '0') {
@@ -296,13 +301,14 @@ void Decompress(string inputFile, string codeFile, string outputFile)
     ofstream out(outputFile, ios::binary);
 
 
-    // Read padding byte
+	// Read padding
     unsigned char padding;
     in.read((char*)&padding, 1);
 
     ll totalSize = getFileSize(inputFile);
     ll bytesRead = 1;
 
+	// Decode bits
     Node* current = root;
     char buffer[BUFFER_SIZE];
     char outBuffer[BUFFER_SIZE];
@@ -318,7 +324,7 @@ void Decompress(string inputFile, string codeFile, string outputFile)
 
         bool isLastChunk = (in.peek() == EOF);
 
-
+		// Process each byte
         for (int i = 0; i < count; i++) {
             unsigned char byte = (unsigned char)buffer[i];
 
@@ -328,6 +334,7 @@ void Decompress(string inputFile, string codeFile, string outputFile)
                 bitsToRead = 8 - padding;
             }
 
+			// Read each bit
             for (int bit = 7; bit >= 8 - bitsToRead; bit--) {
                 int bitVal = (byte >> bit) & 1;
 
@@ -350,6 +357,7 @@ void Decompress(string inputFile, string codeFile, string outputFile)
         }
     }
 
+	// Write any remaining output
     if (outPos > 0) {
         out.write(outBuffer, outPos);
     }
