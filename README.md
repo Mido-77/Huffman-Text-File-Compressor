@@ -35,7 +35,6 @@ These are the links and resources that inspired and helped us build this project
 - https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/
 - https://www.w3schools.com/dsa/dsa_ref_huffman_coding.php
 - https://brilliant.org/wiki/huffman-encoding/
-- https://brilliant.org/wiki/huffman-encoding/
 - https://www.youtube.com/watch?v=co4_ahEDCho
 - https://www.cs.cmu.edu/~guyb/realworld/compression.pdf
 
