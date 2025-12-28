@@ -104,8 +104,10 @@ public:
         arr = new (nothrow) Node[capacity];
     }
 
+	// Destructor
     ~Heap() { delete[] arr; }
 
+	// another Constructor
     Heap(const Heap& other)
     {
         size = other.size;
@@ -118,6 +120,7 @@ public:
         }
     }
 
+	// Assignment Operator
     Heap& operator=(const Heap& other)
     {
         if (this != &other) {
@@ -134,6 +137,7 @@ public:
         }
         return *this;
     }
+
     // Adds a new item to the heap
     void Add(Node item)
     {
