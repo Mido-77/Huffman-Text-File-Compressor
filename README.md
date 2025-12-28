@@ -29,7 +29,6 @@ Our program works reliably now, compressing and decompressing files correctly. B
 This project taught us more than just Huffman coding. We learned about teamwork, problem-solving, and turning theoretical concepts into practical applications. It was challenging but incredibly rewarding to see our ideas become a working program that can actually compress and decompress files!
 
 
-
 ## Inspiration & Resources
 These are the links and resources that inspired and helped us build this project:
 - lectures codes
@@ -39,8 +38,6 @@ These are the links and resources that inspired and helped us build this project
 - https://brilliant.org/wiki/huffman-encoding/
 - https://www.youtube.com/watch?v=co4_ahEDCho
 - https://www.cs.cmu.edu/~guyb/realworld/compression.pdf
-- https://www.nayuki.io/page/reference-huffman-coding  ???
-- https://github.com/kedartatwawadi/stanford_compression_library/blob/main/scl/compressors/huffman_coder.py  ????
 
 
 ## 🛠️ Implementation Process
@@ -55,24 +52,3 @@ These are the links and resources that inspired and helped us build this project
 Compress: input.txt → input.cod + input.com
 
 Decompress: input.com + input.cod → output.txt
-
-
-## 🎓 Educational Value
-This implementation demonstrates:
-- Huffman coding algorithm
-- Binary tree construction and traversal
-- Heap data structure
-- Bit manipulation
-- File I/O operations
-- Compression principles
-
-
-## 💡 Tips for Use
-- Test with files <4GB for meaningful compression
-- Compare file sizes: input.txt input.com
-- Verify decompression: diff input.txt input2.txt
-- Try different text types (code, prose, repetitive data)
-
-## 📄 License
-This project is for educational purposes. Modify and distribute as needed.
-
